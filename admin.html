@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Panel - Neon Hub</title>
+<style>
+:root{--accent:#63f0ff;--neon:#8c55ff;}
+body{
+  margin:0;
+  background:radial-gradient(circle at center,#040414 0%,#000008 100%);
+  color:#eaf9ff;
+  font-family:"Poppins",sans-serif;
+  overflow-x:hidden;
+}
+#tsparticles{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.wrap{max-width:900px;margin:auto;padding:30px;position:relative;z-index:1;}
+h2{text-shadow:0 0 10px var(--accent),0 0 20px var(--neon);animation:glow 3s infinite alternate;}
+@keyframes glow{from{text-shadow:0 0 10px var(--accent);}to{text-shadow:0 0 25px var(--neon);}}
+.card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(99,240,255,0.1);
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:16px;
+  backdrop-filter:blur(6px);
+}
+input{width:100%;padding:8px;border-radius:8px;border:none;margin-bottom:10px;background:rgba(255,255,255,0.05);color:#eaf9ff;outline:none;}
+.btn{padding:8px 12px;border-radius:8px;border:none;background:linear-gradient(90deg,#8c55ff,#63f0ff);color:#021;font-weight:700;cursor:pointer;}
+.small{font-size:13px;padding:6px 8px;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@3.6.0/tsparticles.bundle.min.js"></script>
+</head>
+<body>
+<div id="tsparticles"></div>
+<div class="wrap">
+<h2>Panel Admin — Neon Hub</h2>
+
+<div id="loginCard" class="card">
+  <input id="username" placeholder="Usuario">
+  <input id="password" type="password" placeholder="Contraseña">
+  <button id="loginBtn" class="btn">Entrar</button>
+</div>
+
+<div id="panel" style="display:none">
+  <div class="card">
+    <h3>Identidad</h3>
+    <input id="title" placeholder="Título del admin">
+    <input id="logoUrl" placeholder="URL del logo">
+    <button id="saveIdentity" class="btn small">Guardar</button>
+  </div>
+
+  <div class="card">
+    <h3>Nueva publicación</h3>
+    <input id="postTitle" placeholder="Título">
+    <input id="youtube" placeholder="Link YouTube">
+    <input id="download" placeholder="Link Descarga">
+    <input id="tutorial" placeholder="Link Tutorial">
+    <input id="whatsapp" placeholder="Link WhatsApp">
+    <button id="publish" class="btn">Publicar</button>
+  </div>
+
+  <div class="card">
+    <h3>Mis publicaciones</h3>
+    <div id="myPosts">Cargando...</div>
+  </div>
+</div>
+</div>
+
+<script type="module">
+import { db } from './firebase-config.js';
+import { collection, query, where, getDocs, addDoc, serverTimestamp, updateDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+tsParticles.load("tsparticles",{
+ fullScreen:{enable:true,zIndex:0},
+ particles:{
+  number:{value:120,density:{enable:true,value_area:800}},
+  color:{value:["#63f0ff","#8c55ff","#00ffff"]},
+  shape:{type:"circle"},
+  opacity:{value:0.6,random:true,animation:{enable:true,speed:0.6,min:0.2}},
+  size:{value:2.8,random:true,animation:{enable:true,speed:2,min:0.4}},
+  links:{enable:true,distance:150,color:"#7affff",opacity:0.25,width:1},
+  move:{enable:true,speed:0.8,attract:{enable:true,rotateX:600,rotateY:1200}}
+ },
+ interactivity:{
+  events:{onHover:{enable:true,mode:"repulse"},onClick:{enable:true,mode:"push"}},
+  modes:{repulse:{distance:100},push:{quantity:3}}
+ },
+ detectRetina:true
+});
+
+const loginCard=document.getElementById("loginCard");
+const panel=document.getElementById("panel");
+let currentAdmin=null;
+
+loginBtn.onclick=async()=>{
+  const user=username.value.trim();
+  const pass=password.value.trim();
+  if(!user||!pass)return alert("Rellena usuario y contraseña");
+  const q=query(collection(db,"admins"),where("username","==",user),where("password","==",pass));
+  const snap=await getDocs(q);
+  if(snap.empty)return alert("Credenciales inválidas");
+  currentAdmin={id:snap.docs[0].id,...snap.docs[0].data()};
+  loginCard.style.display="none";panel.style.display="block";
+  loadMyPosts();
+};
+
+saveIdentity.onclick=async()=>{
+  const title=title.value.trim();
+  const logo=logoUrl.value.trim();
+  await updateDoc(doc(db,"admins",currentAdmin.id),{title:title,logoUrl:logo});
+  alert("Identidad guardada");
+};
+
+publish.onclick=async()=>{
+  const data={
+    admin:currentAdmin.username,
+    title:postTitle.value,
+    youtube:youtube.value,
+    download:download.value,
+    tutorial:tutorial.value,
+    whatsapp:whatsapp.value,
+    logo:currentAdmin.logoUrl||"",
+    ts:serverTimestamp()
+  };
+  await addDoc(collection(db,"posts"),data);
+  alert("Publicado");
+  loadMyPosts();
+};
+
+async function loadMyPosts(){
+  const q=query(collection(db,"posts"),where("admin","==",currentAdmin.username),orderBy("ts","desc"));
+  const snap=await getDocs(q);
+  myPosts.innerHTML="";
+  snap.forEach(d=>{
+    const p=d.data();
+    const div=document.createElement("div");
+    div.style.border="1px solid rgba(255,255,255,0.1)";
+    div.style.padding="6px";
+    div.style.marginBottom="6px";
+    div.innerHTML=`<b>${p.title}</b><br><span style='color:#9bf'>${p.youtube}</span>`;
+    myPosts.appendChild(div);
+  });
+}
+
+// Crear admin demo si no existe
+(async()=>{
+  const snap=await getDocs(collection(db,"admins"));
+  if(snap.empty){
+    await addDoc(collection(db,"admins"),{
+      username:"manuel",password:"1234",title:"Manuel - Canal",logoUrl:"https://via.placeholder.com/128x128.png?text=Manuel"
+    });
+    console.log("Admin de ejemplo creado: manuel / 1234");
+  }
+})();
+</script>
+</body>
+</html>
