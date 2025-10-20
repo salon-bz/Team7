@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Publicaciones - Neon Hub</title>
+<style>
+:root{
+  --bg:#030312;
+  --accent:#63f0ff;
+  --neon1:#8c55ff;
+  --neon2:#00ffff;
+  font-family:"Poppins",sans-serif;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(circle at center,#06061a 0%,#01010a 100%);
+  color:#e8f7ff;
+  overflow-x:hidden;
+}
+#tsparticles{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:auto;padding:28px;}
+header{display:flex;align-items:center;gap:16px;margin-bottom:18px;}
+header img.logo{
+  width:72px;height:72px;border-radius:50%;
+  box-shadow:0 0 25px rgba(140,85,255,0.4);
+  animation:glowLogo 3s infinite alternate;
+}
+@keyframes glowLogo{
+  from{box-shadow:0 0 10px #63f0ff;}
+  to{box-shadow:0 0 30px #8c55ff;}
+}
+header h1{
+  font-size:1.6em;
+  color:var(--accent);
+  text-shadow:0 0 15px var(--neon1),0 0 30px var(--neon2);
+  animation:glowText 3s ease-in-out infinite alternate;
+}
+@keyframes glowText{
+  from{text-shadow:0 0 10px var(--accent);}
+  to{text-shadow:0 0 25px var(--neon2);}
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:18px;
+}
+.card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(99,240,255,0.1);
+  border-radius:14px;
+  padding:14px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 0 10px rgba(99,240,255,0.05);
+  transition:transform 0.3s,box-shadow 0.3s;
+}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 0 20px rgba(99,240,255,0.15);
+}
+.video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;}
+.btn{padding:8px 12px;border-radius:10px;border:none;background:transparent;color:var(--accent);cursor:pointer;outline:none;font-weight:600;box-shadow:0 0 15px rgba(99,240,255,0.2);border:1px solid rgba(99,240,255,0.3);transition:0.3s;}
+.btn:hover{background:rgba(99,240,255,0.1);}
+.small{font-size:13px;padding:6px 8px;}
+footer{text-align:center;color:#7acbff;font-size:13px;margin-top:30px;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@3.6.0/tsparticles.bundle.min.js"></script>
+</head>
+<body>
+<div id="tsparticles"></div>
+<div class="wrap">
+<header>
+  <img id="headerLogo" class="logo" src="https://via.placeholder.com/100x100.png?text=Logo">
+  <h1 id="headerTitle">Neon Hub — Publicaciones</h1>
+</header>
+<div id="cards" class="cards"></div>
+<footer>🔥 Neon Hub — powered by Firebase</footer>
+</div>
+
+<script type="module">
+import { db } from './firebase-config.js';
+import { collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+// Partículas NEÓN
+tsParticles.load("tsparticles",{
+ fullScreen:{enable:true,zIndex:0},
+ particles:{
+  number:{value:120,density:{enable:true,value_area:800}},
+  color:{value:["#63f0ff","#8c55ff","#00ffff"]},
+  shape:{type:"circle"},
+  opacity:{value:0.6,random:true,animation:{enable:true,speed:0.6,min:0.2}},
+  size:{value:2.8,random:true,animation:{enable:true,speed:2,min:0.4}},
+  links:{enable:true,distance:150,color:"#7affff",opacity:0.25,width:1},
+  move:{enable:true,speed:0.8,attract:{enable:true,rotateX:600,rotateY:1200}}
+ },
+ interactivity:{
+  events:{onHover:{enable:true,mode:"repulse"},onClick:{enable:true,mode:"push"}},
+  modes:{repulse:{distance:100},push:{quantity:3}}
+ },
+ detectRetina:true
+});
+
+// Mostrar publicaciones
+const params = new URLSearchParams(location.search);
+const adminFilter = params.get("admin");
+const cardsEl = document.getElementById("cards");
+const headerLogo = document.getElementById("headerLogo");
+const headerTitle = document.getElementById("headerTitle");
+
+async function loadPosts(){
+  cardsEl.innerHTML="<div style='color:#9bf'>Cargando publicaciones...</div>";
+  const postsRef=collection(db,"posts");
+  const q=adminFilter?query(postsRef,where("admin","==",adminFilter),orderBy("ts","desc")):query(postsRef,orderBy("ts","desc"));
+  const snapshot=await getDocs(q);
+  const posts=[];
+  snapshot.forEach(doc=>posts.push({id:doc.id,...doc.data()}));
+
+  if(adminFilter&&posts.length>0){
+    const adminSnap=await getDocs(query(collection(db,"admins"),where("username","==",adminFilter)));
+    if(!adminSnap.empty){
+      const ad=adminSnap.docs[0].data();
+      headerLogo.src=ad.logoUrl||headerLogo.src;
+      headerTitle.textContent=ad.title||headerTitle.textContent;
+    }
+  }
+  renderPosts(posts);
+}
+
+function youtubeIdFromUrl(url){
+  const re=/(?:v=|\/embed\/|\.be\/)([A-Za-z0-9_-]{6,})/;
+  const m=url.match(re);
+  return m?m[1]:null;
+}
+
+function renderPosts(posts){
+  if(posts.length===0){
+    cardsEl.innerHTML="<div style='color:#9bf'>No hay publicaciones aún.</div>";
+    return;
+  }
+  cardsEl.innerHTML="";
+  posts.forEach(p=>{
+    const vid=youtubeIdFromUrl(p.youtube||"");
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+    <h3>${p.title||"Sin título"}</h3>
+    ${vid?`<div class='video-wrap'><iframe src='https://www.youtube.com/embed/${vid}' allowfullscreen></iframe></div>`:""}
+    <div style='display:flex;gap:8px;flex-wrap:wrap;margin-top:8px'>
+      ${p.download?`<a class='btn small' href='${p.download}' target='_blank'>Descargar</a>`:""}
+      ${p.tutorial?`<a class='btn small' href='${p.tutorial}' target='_blank'>Ver Tutorial</a>`:""}
+      ${p.whatsapp?`<a class='btn small' href='${p.whatsapp}' target='_blank'>Unirse WhatsApp</a>`:""}
+      <button class='btn small' onclick="navigator.clipboard.writeText(location.origin+location.pathname+'?admin=${p.admin}').then(()=>alert('Link copiado'))">Copiar link</button>
+    </div>`;
+    cardsEl.appendChild(card);
+  });
+}
+
+loadPosts();
+</script>
+</body>
+</html>
