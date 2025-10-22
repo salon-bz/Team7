@@ -1,168 +1,234 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Publicaciones - Neon Hub</title>
-<style>
-:root{
-  --bg:#030312;
-  --accent:#63f0ff;
-  --neon1:#8c55ff;
-  --neon2:#00ffff;
-  font-family:"Poppins",sans-serif;
-}
-body{
-  margin:0;
-  min-height:100vh;
-  background:radial-gradient(circle at center,#06061a 0%,#01010a 100%);
-  color:#e8f7ff;
-  overflow-x:hidden;
-}
-#tsparticles{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-}
-.wrap{position:relative;z-index:1;max-width:1100px;margin:auto;padding:28px;}
-header{display:flex;align-items:center;gap:16px;margin-bottom:18px;}
-header img.logo{
-  width:72px;height:72px;border-radius:50%;
-  box-shadow:0 0 25px rgba(140,85,255,0.4);
-  animation:glowLogo 3s infinite alternate;
-}
-@keyframes glowLogo{
-  from{box-shadow:0 0 10px #63f0ff;}
-  to{box-shadow:0 0 30px #8c55ff;}
-}
-header h1{
-  font-size:1.6em;
-  color:var(--accent);
-  text-shadow:0 0 15px var(--neon1),0 0 30px var(--neon2);
-  animation:glowText 3s ease-in-out infinite alternate;
-}
-@keyframes glowText{
-  from{text-shadow:0 0 10px var(--accent);}
-  to{text-shadow:0 0 25px var(--neon2);}
-}
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-  gap:18px;
-}
-.card{
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(99,240,255,0.1);
-  border-radius:14px;
-  padding:14px;
-  backdrop-filter:blur(6px);
-  box-shadow:0 0 10px rgba(99,240,255,0.05);
-  transition:transform 0.3s,box-shadow 0.3s;
-}
-.card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 0 20px rgba(99,240,255,0.15);
-}
-.video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;}
-.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;}
-.btn{padding:8px 12px;border-radius:10px;border:none;background:transparent;color:var(--accent);cursor:pointer;outline:none;font-weight:600;box-shadow:0 0 15px rgba(99,240,255,0.2);border:1px solid rgba(99,240,255,0.3);transition:0.3s;}
-.btn:hover{background:rgba(99,240,255,0.1);}
-.small{font-size:13px;padding:6px 8px;}
-footer{text-align:center;color:#7acbff;font-size:13px;margin-top:30px;}
-</style>
-<script src="https://cdn.jsdelivr.net/npm/tsparticles@3.6.0/tsparticles.bundle.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>𝐒𝐎𝐏𝐎𝐑𝐓𝐄 | 𝐂𝐋𝐈𝐄𝐍𝐓𝐄𝐒</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#07020b;
+      --neon-purple:#8b3cff;
+      --neon-red:#ff2d6f;
+      --card: rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, Arial;color:#efe9ff;background:var(--bg);}
+    #particles-js{position:fixed;inset:0;z-index:0}
+    .wrap{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+    .card{width:100%;max-width:980px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:16px;padding:26px;box-shadow:0 8px 40px rgba(0,0,0,0.6);backdrop-filter: blur(6px);border:1px solid rgba(139,60,255,0.12)}
+    header h1{font-family:"Segoe UI Black","Arial Black",sans-serif;font-weight:900;letter-spacing:6px;margin:0 0 6px;font-size:20px;background:linear-gradient(90deg,var(--neon-purple),var(--neon-red));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .subtitle{color:rgba(233,230,243,0.7);margin-bottom:18px}
+    form .row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+    input, textarea, select{
+      width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+      background:var(--card);color:inherit;outline:none;font-size:14px;
+    }
+    textarea{min-height:110px;resize:vertical}
+    .btn{
+      padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;
+      background:linear-gradient(90deg,var(--neon-purple),var(--neon-red));color:white;box-shadow:0 6px 20px rgba(139,60,255,0.14);
+    }
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);box-shadow:none;color:rgba(233,230,243,0.9)}
+    .bottom-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:12px;flex-wrap:wrap}
+    .footer{margin-top:18px;text-align:center;color:rgba(233,230,243,0.5);font-size:13px}
+    .note{font-size:13px;color:rgba(233,230,243,0.6)}
+    .preview-img{max-width:100%;height:auto;border-radius:8px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+
+    .modal-backdrop{position:fixed;inset:0;background:linear-gradient(180deg, rgba(4,3,6,0.6), rgba(4,3,6,0.85));display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
+    .modal{width:100%;max-width:920px;background:linear-gradient(180deg, rgba(12,6,20,0.96), rgba(10,4,16,0.97));border-radius:12px;padding:16px;border:1px solid rgba(139,60,255,0.12);box-shadow:0 10px 40px rgba(0,0,0,0.7)}
+    .modal header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .modal h3{margin:0;font-size:16px;color:var(--neon-purple)}
+    .closeModal{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:6px 8px;border-radius:8px;color:#fff;cursor:pointer}
+    .modal iframe{width:100%;height:420px;border-radius:8px;border:0}
+    .modal .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+  </style>
 </head>
 <body>
-<div id="tsparticles"></div>
-<div class="wrap">
-<header>
-  <img id="headerLogo" class="logo" src="https://via.placeholder.com/100x100.png?text=Logo">
-  <h1 id="headerTitle">Neon Hub — Publicaciones</h1>
-</header>
-<div id="cards" class="cards"></div>
-<footer>🔥 Neon Hub — powered by Firebase</footer>
-</div>
+  <div id="particles-js"></div>
 
-<script type="module">
-import { db } from './firebase-config.js';
-import { collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <h1>𝐒𝐎𝐏𝐎𝐑𝐓𝐄 | 𝐂𝐋𝐈𝐄𝐍𝐓𝐄𝐒</h1>
+        <div class="subtitle">Rellena y súbelo — si necesitas mostrar la imagen te guiamos con un tutorial.</div>
+      </header>
 
-// Partículas NEÓN
-tsParticles.load("tsparticles",{
- fullScreen:{enable:true,zIndex:0},
- particles:{
-  number:{value:120,density:{enable:true,value_area:800}},
-  color:{value:["#63f0ff","#8c55ff","#00ffff"]},
-  shape:{type:"circle"},
-  opacity:{value:0.6,random:true,animation:{enable:true,speed:0.6,min:0.2}},
-  size:{value:2.8,random:true,animation:{enable:true,speed:2,min:0.4}},
-  links:{enable:true,distance:150,color:"#7affff",opacity:0.25,width:1},
-  move:{enable:true,speed:0.8,attract:{enable:true,rotateX:600,rotateY:1200}}
- },
- interactivity:{
-  events:{onHover:{enable:true,mode:"repulse"},onClick:{enable:true,mode:"push"}},
-  modes:{repulse:{distance:100},push:{quantity:3}}
- },
- detectRetina:true
-});
+      <form id="supportForm">
+        <div class="row">
+          <textarea id="descripcion" placeholder="Describe brevemente el problema..." required></textarea>
+        </div>
 
-// Mostrar publicaciones
-const params = new URLSearchParams(location.search);
-const adminFilter = params.get("admin");
-const cardsEl = document.getElementById("cards");
-const headerLogo = document.getElementById("headerLogo");
-const headerTitle = document.getElementById("headerTitle");
+        <!-- Selector de país + número -->
+        <div class="row">
+          <select id="countryCode" required>
+            <option value="">🌐 Selecciona país...</option>
+            <option value="+54">🇦🇷 Argentina (+54)</option>
+            <option value="+591">🇧🇴 Bolivia (+591)</option>
+            <option value="+56">🇨🇱 Chile (+56)</option>
+            <option value="+57">🇨🇴 Colombia (+57)</option>
+            <option value="+506">🇨🇷 Costa Rica (+506)</option>
+            <option value="+53">🇨🇺 Cuba (+53)</option>
+            <option value="+593">🇪🇨 Ecuador (+593)</option>
+            <option value="+503">🇸🇻 El Salvador (+503)</option>
+            <option value="+502">🇬🇹 Guatemala (+502)</option>
+            <option value="+504">🇭🇳 Honduras (+504)</option>
+            <option value="+52">🇲🇽 México (+52)</option>
+            <option value="+505">🇳🇮 Nicaragua (+505)</option>
+            <option value="+507">🇵🇦 Panamá (+507)</option>
+            <option value="+595">🇵🇾 Paraguay (+595)</option>
+            <option value="+51">🇵🇪 Perú (+51)</option>
+            <option value="+598">🇺🇾 Uruguay (+598)</option>
+            <option value="+58">🇻🇪 Venezuela (+58)</option>
+            <option value="+34">🇪🇸 España (+34)</option>
+          </select>
+          <input id="whatsapp" type="tel" placeholder="Número WhatsApp" required>
+          <input id="dias" type="number" min="0" placeholder="Días comprados" style="max-width:140px" required>
+        </div>
 
-async function loadPosts(){
-  cardsEl.innerHTML="<div style='color:#9bf'>Cargando publicaciones...</div>";
-  const postsRef=collection(db,"posts");
-  const q=adminFilter?query(postsRef,where("admin","==",adminFilter),orderBy("ts","desc")):query(postsRef,orderBy("ts","desc"));
-  const snapshot=await getDocs(q);
-  const posts=[];
-  snapshot.forEach(doc=>posts.push({id:doc.id,...doc.data()}));
+        <div style="margin:14px 0">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <button type="button" id="openUpload" class="btn">Subir foto (usar postimages)</button>
+            <input id="imgLink" type="text" placeholder="Pega aquí el link directo de la imagen" style="flex:1">
+          </div>
+          <div style="margin-top:8px" id="imgPreviewWrap"></div>
+          <div class="note" style="margin-top:10px">Si no subes imagen, deja el campo vacío.</div>
+        </div>
 
-  if(adminFilter&&posts.length>0){
-    const adminSnap=await getDocs(query(collection(db,"admins"),where("username","==",adminFilter)));
-    if(!adminSnap.empty){
-      const ad=adminSnap.docs[0].data();
-      headerLogo.src=ad.logoUrl||headerLogo.src;
-      headerTitle.textContent=ad.title||headerTitle.textContent;
+        <div class="bottom-row">
+          <div style="display:flex;gap:10px">
+            <button type="submit" class="btn">Enviar solicitud</button>
+            <button type="button" id="limpiar" class="btn ghost">Limpiar</button>
+          </div>
+          <div style="font-size:13px;color:rgba(233,230,243,0.6)">2024 - 2025 𝐋𝐔𝐂𝐊 𝐗!𝐓</div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal tutorial -->
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <header>
+        <h3>Tutorial para subir imagen</h3>
+        <button id="closeModal" class="closeModal">Cerrar</button>
+      </header>
+      <div id="modalContent" style="min-height:240px;display:flex;align-items:center;justify-content:center;color:rgba(220,220,230,0.6)">
+        Cargando tutorial...
+      </div>
+      <div class="actions">
+        <button id="yaEntendiBtn" class="btn">Ya entendí — Ir a postimages</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC0nZkL5C3CH60ogOh1ekTor9E1uqN1Ibk",
+      authDomain: "soportedrip.firebaseapp.com",
+      projectId: "soportedrip",
+      storageBucket: "soportedrip.firebasestorage.app",
+      messagingSenderId: "258679857031",
+      appId: "1:258679857031:web:3dba66238f434539097d22"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    particlesJS("particles-js", {
+      particles:{number:{value:60},color:{value:["#8b3cff","#ff2d6f"]},shape:{type:"circle"},opacity:{value:0.6},size:{value:3}},
+      interactivity:{events:{onhover:{enable:true,mode:"repulse"}}}
+    });
+
+    const openUpload=document.getElementById('openUpload');
+    const modalBackdrop=document.getElementById('modalBackdrop');
+    const modalContent=document.getElementById('modalContent');
+    const closeModal=document.getElementById('closeModal');
+    const yaEntendiBtn=document.getElementById('yaEntendiBtn');
+    const imgLink=document.getElementById('imgLink');
+    const imgPreviewWrap=document.getElementById('imgPreviewWrap');
+    const supportForm=document.getElementById('supportForm');
+    const descripcion=document.getElementById('descripcion');
+    const whatsapp=document.getElementById('whatsapp');
+    const dias=document.getElementById('dias');
+    const limpiar=document.getElementById('limpiar');
+    const countryCode=document.getElementById('countryCode');
+
+    async function loadVideoConfig(){
+      try{
+        const cfgRef=doc(db,'config','tutorial');
+        const snap=await getDoc(cfgRef);
+        if(snap.exists()){
+          const data=snap.data();
+          if(data && data.youtube){
+            let yt=data.youtube.trim();
+            let embedUrl=yt.includes('watch?v=')?yt.replace('watch?v=','embed/'):yt.replace('youtu.be/','www.youtube.com/embed/');
+            modalContent.innerHTML=`<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+            return true;
+          }
+        }
+        modalContent.innerHTML=`<div style="padding:18px;color:rgba(220,220,230,0.7);text-align:center">No hay tutorial configurado.</div>`;
+        return false;
+      }catch(e){
+        modalContent.innerHTML=`<div style="padding:18px;color:rgba(220,220,230,0.7);text-align:center">Error cargando tutorial.</div>`;
+        return false;
+      }
     }
-  }
-  renderPosts(posts);
-}
 
-function youtubeIdFromUrl(url){
-  const re=/(?:v=|\/embed\/|\.be\/)([A-Za-z0-9_-]{6,})/;
-  const m=url.match(re);
-  return m?m[1]:null;
-}
+    function openModal(){modalBackdrop.style.display='flex';document.body.style.overflow='hidden';}
+    function closeModalFn(){modalBackdrop.style.display='none';document.body.style.overflow='';}
+    openUpload.addEventListener('click',async()=>{await loadVideoConfig();openModal();});
+    closeModal.addEventListener('click',()=>closeModalFn());
+    yaEntendiBtn.addEventListener('click',()=>{closeModalFn();window.location.href='https://postimages.org/es/';});
 
-function renderPosts(posts){
-  if(posts.length===0){
-    cardsEl.innerHTML="<div style='color:#9bf'>No hay publicaciones aún.</div>";
-    return;
-  }
-  cardsEl.innerHTML="";
-  posts.forEach(p=>{
-    const vid=youtubeIdFromUrl(p.youtube||"");
-    const card=document.createElement("div");
-    card.className="card";
-    card.innerHTML=`
-    <h3>${p.title||"Sin título"}</h3>
-    ${vid?`<div class='video-wrap'><iframe src='https://www.youtube.com/embed/${vid}' allowfullscreen></iframe></div>`:""}
-    <div style='display:flex;gap:8px;flex-wrap:wrap;margin-top:8px'>
-      ${p.download?`<a class='btn small' href='${p.download}' target='_blank'>Descargar</a>`:""}
-      ${p.tutorial?`<a class='btn small' href='${p.tutorial}' target='_blank'>Ver Tutorial</a>`:""}
-      ${p.whatsapp?`<a class='btn small' href='${p.whatsapp}' target='_blank'>Unirse WhatsApp</a>`:""}
-      <button class='btn small' onclick="navigator.clipboard.writeText(location.origin+location.pathname+'?admin=${p.admin}').then(()=>alert('Link copiado'))">Copiar link</button>
-    </div>`;
-    cardsEl.appendChild(card);
-  });
-}
+    imgLink.addEventListener('input',()=>{
+      const url=imgLink.value.trim();
+      imgPreviewWrap.innerHTML='';
+      if(url){
+        const img=document.createElement('img');
+        img.src=url;img.className='preview-img';
+        img.onerror=()=>{imgPreviewWrap.innerHTML='<div style="color:rgba(233,230,243,0.6)">Link inválido.</div>';};
+        imgPreviewWrap.appendChild(img);
+      }
+    });
 
-loadPosts();
-</script>
+    limpiar.addEventListener('click',()=>{descripcion.value='';whatsapp.value='';dias.value='';imgLink.value='';imgPreviewWrap.innerHTML='';countryCode.value='';});
+
+    countryCode.addEventListener('change',()=>{
+      const code=countryCode.value;
+      if(code) whatsapp.value=code+" ";
+    });
+
+    supportForm.addEventListener('submit',async(e)=>{
+      e.preventDefault();
+      const desc=descripcion.value.trim();
+      const wa=whatsapp.value.trim();
+      const d=dias.value;
+      const link=imgLink.value.trim();
+      const code=countryCode.value;
+
+      if(!code){
+        alert('Por favor selecciona el código de país.');
+        return;
+      }
+      if(!desc || !wa || d===''){
+        alert('Completa todos los campos.');
+        return;
+      }
+
+      try{
+        await addDoc(collection(db,'solicitudes'),{descripcion:desc,whatsapp:wa,dias:Number(d),imgLink:link||null,createdAt:new Date().toISOString()});
+        alert('Solicitud enviada. Pronto te contactaremos por WhatsApp.');
+        limpiar.click();
+      }catch(err){
+        console.error(err);
+        alert('Error al enviar la solicitud.');
+      }
+    });
+  </script>
 </body>
 </html>
